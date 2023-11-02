@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { TextField, Button, Callout } from '@radix-ui/themes';
-import dynamic from 'next/dynamic';
+import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
@@ -12,11 +12,6 @@ import { z } from 'zod';
 import { ErrorMessage, Spinner } from '@/app/components';
 import { Issue } from '@prisma/client';
 type IssueFormData = z.infer<typeof createIssueSchema>;
-
-const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
-  ssr: false,
-});
-
 const IssueForm = ({ issue }: { issue: Issue }) => {
   const {
     register,
@@ -55,7 +50,7 @@ const IssueForm = ({ issue }: { issue: Issue }) => {
           <TextField.Input
             placeholder="title"
             {...register('title')}
-            defaultValue={issue.title}
+            defaultValue={issue?.title}
           />
         </TextField.Root>
 
@@ -63,7 +58,7 @@ const IssueForm = ({ issue }: { issue: Issue }) => {
         <Controller
           control={control}
           name="description"
-          defaultValue={issue.description}
+          defaultValue={issue?.description}
           render={({ field }) => (
             <SimpleMDE placeholder="Description" {...field} />
           )}
