@@ -12,7 +12,7 @@ import { z } from 'zod';
 import { ErrorMessage, Spinner } from '@/app/components';
 import { Issue } from '@prisma/client';
 type IssueFormData = z.infer<typeof createIssueSchema>;
-const IssueForm = ({ issue }: { issue: Issue }) => {
+const IssueForm = ({ issue }: { issue?: Issue }) => {
   const {
     register,
     control,
