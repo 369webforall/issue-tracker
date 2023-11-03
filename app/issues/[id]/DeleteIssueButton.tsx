@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { AlertDialog, Button, Flex } from '@radix-ui/themes';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { Spinner } from '@/app/components';
+// import delay from 'delay';
 // const deleteIssue = async (issueId) => {
 //   await axios.delete('/api/issues/edit' + issueId);
 // };
@@ -10,11 +12,14 @@ import { useRouter } from 'next/navigation';
 const DeleteIssueButton = ({ issueId }: { issueId: string }) => {
   const router = useRouter();
   const [error, setError] = useState(false);
+  const [isDeleting, setDeleting] = useState(false);
   return (
     <>
       <AlertDialog.Root>
         <AlertDialog.Trigger>
-          <Button color="red">Delete Issue</Button>
+          <Button color="red" disabled={isDeleting}>
+            Delete Issue {isDeleting && <Spinner />}
+          </Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content>
           <AlertDialog.Title>Confirm Deletion</AlertDialog.Title>
@@ -35,6 +40,8 @@ const DeleteIssueButton = ({ issueId }: { issueId: string }) => {
                 color="red"
                 onClick={async () => {
                   try {
+                    setDeleting(true);
+                    // delay(4000);
                     await axios.delete('/api/issues/edit/' + issueId);
                     router.push('/issues');
                     router.refresh();
