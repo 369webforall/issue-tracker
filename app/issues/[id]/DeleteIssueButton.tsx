@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { AlertDialog, Button, Flex } from '@radix-ui/themes';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 
 const DeleteIssueButton = ({ issueId }: { issueId: string }) => {
   const router = useRouter();
+  const [error, setError] = useState(false);
   return (
     <>
       <AlertDialog.Root>
@@ -33,16 +34,33 @@ const DeleteIssueButton = ({ issueId }: { issueId: string }) => {
                 variant="solid"
                 color="red"
                 onClick={async () => {
-                  console.log(issueId);
-                  await axios.delete('/api/issues/edit/' + issueId);
-                  router.push('/issues');
-                  router.refresh();
+                  try {
+                    await axios.delete('/api/issues/edit/' + issueId);
+                    router.push('/issues');
+                    router.refresh();
+                  } catch (error) {
+                    setError(true);
+                  }
                 }}
               >
                 Delete Issue
               </Button>
             </AlertDialog.Action>
           </Flex>
+        </AlertDialog.Content>
+      </AlertDialog.Root>
+
+      <AlertDialog.Root open={error}>
+        <AlertDialog.Content>
+          <AlertDialog.Title>Error Message</AlertDialog.Title>
+          <AlertDialog.Description>
+            Unable to delete this issue
+          </AlertDialog.Description>
+          <AlertDialog.Cancel>
+            <Button variant="soft" color="gray" onClick={() => setError(false)}>
+              OK
+            </Button>
+          </AlertDialog.Cancel>
         </AlertDialog.Content>
       </AlertDialog.Root>
     </>
