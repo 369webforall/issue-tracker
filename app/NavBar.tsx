@@ -14,6 +14,7 @@ import {
   Text,
 } from '@radix-ui/themes';
 
+import Skeleton from '@/app/components/Skeleton';
 const NavBar = () => {
   return (
     <>
@@ -63,6 +64,9 @@ const NavLinks = () => {
 
 const AuthStatus = () => {
   const { status, data: session } = useSession();
+  if (status === 'unauthenticated')
+    return <Link href="/api/auth/signin">Login</Link>;
+  if (status === 'loading') <Skeleton width="3rem" />;
   return (
     <Box>
       {status === 'authenticated' && (
@@ -84,9 +88,6 @@ const AuthStatus = () => {
             </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Root>
-      )}
-      {status === 'unauthenticated' && (
-        <Link href="/api/auth/signin">Login</Link>
       )}
     </Box>
   );
