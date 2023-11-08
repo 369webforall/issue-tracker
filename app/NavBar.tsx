@@ -15,64 +15,14 @@ import {
 } from '@radix-ui/themes';
 
 const NavBar = () => {
-  const pathname = usePathname();
-  const { status, data: session } = useSession();
-  const links = [
-    { id: 1, href: '/', label: 'Dashboard' },
-    { id: 2, href: '/issues/list', label: 'Issues' },
-  ];
   return (
     <>
       <Box className="border-b h-14 mb-5 flex items-center">
         <Container>
           <Flex justify="between" align="center">
-            <nav className="space-x-6 px-5 flex items-center  ">
-              <Link href="/">
-                <AiFillBug className="text-2xl" />
-              </Link>
+            <NavLinks />
 
-              <ul className="flex space-x-6">
-                {links.map((link) => (
-                  <Link
-                    href={link.href}
-                    key={link.id}
-                    className={classnames({
-                      'text-zinc-900': link.href === pathname,
-                      'text-zinc-500': link.href !== pathname,
-                      'hover:text-zinc-800 transition-colors': true,
-                    })}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </ul>
-            </nav>
-
-            <Box>
-              {status === 'authenticated' && (
-                <DropdownMenu.Root>
-                  <DropdownMenu.Trigger>
-                    <Avatar
-                      src={session.user!.image!}
-                      fallback="?"
-                      radius="full"
-                      referrerPolicy="no-referrer"
-                    />
-                  </DropdownMenu.Trigger>
-                  <DropdownMenu.Content>
-                    <DropdownMenu.Label>
-                      <Text>{session.user!.email!}</Text>
-                    </DropdownMenu.Label>
-                    <DropdownMenu.Item>
-                      <Link href="/api/auth/signout">Logout</Link>
-                    </DropdownMenu.Item>
-                  </DropdownMenu.Content>
-                </DropdownMenu.Root>
-              )}
-              {status === 'unauthenticated' && (
-                <Link href="/api/auth/signin">Login</Link>
-              )}
-            </Box>
+            <AuthStatus />
           </Flex>
         </Container>
       </Box>
@@ -80,4 +30,65 @@ const NavBar = () => {
   );
 };
 
+const NavLinks = () => {
+  const pathname = usePathname();
+  const links = [
+    { id: 1, href: '/', label: 'Dashboard' },
+    { id: 2, href: '/issues/list', label: 'Issues' },
+  ];
+  return (
+    <nav className="space-x-6 px-5 flex items-center  ">
+      <Link href="/">
+        <AiFillBug className="text-2xl" />
+      </Link>
+
+      <ul className="flex space-x-6">
+        {links.map((link) => (
+          <Link
+            href={link.href}
+            key={link.id}
+            className={classnames({
+              'text-zinc-900': link.href === pathname,
+              'text-zinc-500': link.href !== pathname,
+              'hover:text-zinc-800 transition-colors': true,
+            })}
+          >
+            {link.label}
+          </Link>
+        ))}
+      </ul>
+    </nav>
+  );
+};
+
+const AuthStatus = () => {
+  const { status, data: session } = useSession();
+  return (
+    <Box>
+      {status === 'authenticated' && (
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger>
+            <Avatar
+              src={session.user!.image!}
+              fallback="?"
+              radius="full"
+              referrerPolicy="no-referrer"
+            />
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content>
+            <DropdownMenu.Label>
+              <Text>{session.user!.email!}</Text>
+            </DropdownMenu.Label>
+            <DropdownMenu.Item>
+              <Link href="/api/auth/signout">Logout</Link>
+            </DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
+      )}
+      {status === 'unauthenticated' && (
+        <Link href="/api/auth/signin">Login</Link>
+      )}
+    </Box>
+  );
+};
 export default NavBar;
