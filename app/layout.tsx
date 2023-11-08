@@ -7,6 +7,7 @@ import './globals.css';
 import NavBar from './NavBar';
 import AuthProvider from './auth/Provider';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+import { Container } from '@radix-ui/themes';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -24,7 +25,9 @@ export default function RootLayout({
         <AuthProvider>
           <Theme accentColor="violet">
             <NavBar />
-            <main className="px-5">{children}</main>
+            <main className="px-5">
+              <Container>{children}</Container>
+            </main>
           </Theme>
         </AuthProvider>
       </body>
