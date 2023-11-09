@@ -3,7 +3,7 @@ import { Select, SelectLabel } from '@radix-ui/themes';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { User } from '@prisma/client';
-// localhost:3000/api/users
+
 const AssigneeSelect = () => {
   const [users, setUsers] = useState<User[]>([]);
 
