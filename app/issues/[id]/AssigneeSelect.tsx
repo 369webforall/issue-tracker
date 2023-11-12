@@ -1,6 +1,5 @@
 'use client';
 import { Select } from '@radix-ui/themes';
-
 import axios from 'axios';
 import { Issue, User } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
@@ -9,13 +8,13 @@ import toast, { Toaster } from 'react-hot-toast';
 
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
   const assignIssue = (userId: string) => {
+    console.log(issue);
+    console.log(userId);
     axios
-      .patch('/api/issues/' + issue.id, {
-        assignedToUserId: userId || null,
+      .patch('/api/issues/edit/' + issue.id, {
+        assignedToUserId: userId === 'unassigned' ? null : userId,
       })
-      .catch(() => {
-        toast.error('Changes could not be saved.');
-      });
+      .catch((error) => toast("Can't update the assigne, try again"));
   };
 
   const { data: users, error, isLoading } = useUsers();
@@ -26,14 +25,14 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
   return (
     <>
       <Select.Root
-        defaultValue={issue.assignedToUserId || 'Unassigned'}
         onValueChange={assignIssue}
+        defaultValue={issue.assignedToUserId || 'unassigned'}
       >
         <Select.Trigger placeholder="Assign..." />
         <Select.Content>
           <Select.Group>
             <Select.Label>Suggestions</Select.Label>
-            <Select.Item value="Unassigned">Unassigned</Select.Item>
+            <Select.Item value="unassigned">Unassigned</Select.Item>
             {users?.map((user) => (
               <Select.Item key={user.id} value={user.id}>
                 {user.name}
