@@ -1,9 +1,9 @@
-import Image from 'next/image';
+import Pagination from './components/Pagination';
 
 export default function Home() {
   return (
     <main>
-      <h1>This is home page</h1>
+      <Pagination itemCount={100} pageSize={10} currentPage={3} />
     </main>
   );
 }
