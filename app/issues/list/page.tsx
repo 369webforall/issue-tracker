@@ -5,11 +5,17 @@ import IssueActions from './IssueActions';
 import { Link, IssueStatusBadge } from '../../components';
 import { Status, Issue } from '@prisma/client';
 import NextLink from 'next/link';
-const IssuePage = async ({
-  searchParams,
-}: {
-  searchParams: { status: Status; orderBy: keyof Issue };
-}) => {
+import Pagination from '@/app/components/Pagination';
+
+interface Props {
+  searchParams: {
+    status: Status;
+    orderBy: keyof Issue;
+    page: string;
+  };
+}
+
+const IssuePage = async ({ searchParams }: Props) => {
   const statuses = Object.values(Status);
   const status = statuses.includes(searchParams.status)
     ? searchParams.status
@@ -34,17 +40,25 @@ const IssuePage = async ({
     .includes(searchParams.orderBy)
     ? { [searchParams.orderBy]: 'asc' }
     : undefined;
+
+  const page = parseInt(searchParams.page) || 1;
+  const pageSize = 10;
+
   const issues = await prisma.issue.findMany({
     where: {
       status,
     },
     orderBy,
+    skip: (page - 1) * pageSize,
+    take: pageSize,
   });
+
+  const issueCount = await prisma.issue.count({ where: { status } });
 
   return (
     <div className="max-w-2xl">
       <IssueActions />
-      <div>
+      <div className="mb-3">
         <Table.Root variant="surface">
           <Table.Header>
             <Table.Row>
@@ -82,6 +96,11 @@ const IssuePage = async ({
           </Table.Body>
         </Table.Root>
       </div>
+      <Pagination
+        pageSize={pageSize}
+        currentPage={page}
+        itemCount={issueCount}
+      />
     </div>
   );
 };
