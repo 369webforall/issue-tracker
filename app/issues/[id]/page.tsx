@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { cache } from 'react';
 import prisma from '@/prisma/client';
 import { notFound } from 'next/navigation';
 import { Grid, Box, Flex } from '@radix-ui/themes';
@@ -12,6 +12,10 @@ import AssigneeSelect from './AssigneeSelect';
 interface Props {
   params: { id: string };
 }
+
+// const fetchIssue = cache((issueId: string) =>
+//   prisma.issue.findUnique({ where: { id: issueId } })
+// );
 
 const IssueDetailsPage = async ({ params }: Props) => {
   const issue = await prisma.issue.findUnique({ where: { id: params.id } });
