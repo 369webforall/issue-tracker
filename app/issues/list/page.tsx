@@ -9,7 +9,7 @@ import Pagination from '@/app/components/Pagination';
 import { columnNames } from './IssueTable';
 import { IssueQuery } from './IssueTable';
 import IssueTable from './IssueTable';
-
+import { Metadata } from 'next';
 interface Props {
   searchParams: IssueQuery;
 }
@@ -51,6 +51,11 @@ const IssuePage = async ({ searchParams }: Props) => {
       />
     </div>
   );
+};
+
+export const metadata: Metadata = {
+  title: 'Issue Tracker - Issue List',
+  description: 'View all project isssue list',
 };
 
 export default IssuePage;
